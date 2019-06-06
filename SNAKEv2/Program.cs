@@ -17,9 +17,9 @@ namespace SNAKEv2
         static void Main(string[] args)
         {
             var prog = new Program();
-            prog.init();
+            prog.Init();
         }
-        void init()
+        void Init()
         {
             //populate board
             var headX = 99;
@@ -120,8 +120,18 @@ namespace SNAKEv2
             {
                 var random = new Random();
                 foodEaten = true;
-                cachedPosFood[0] = random.Next(0, board.GetLength(0) + 1);
-                cachedPosFood[1] = random.Next(0, board.GetLength(1) + 1);
+                while (true)
+                {
+                    var xTest = random.Next(0, board.GetLength(0) + 1);
+                    var ytest = random.Next(0, board.GetLength(1) + 1);
+
+                    if (xTest != cachedPosFood[0] && ytest != cachedPosFood[1])
+                    {
+                        cachedPosFood[0] = random.Next(0, board.GetLength(0) + 1);
+                        cachedPosFood[1] = random.Next(0, board.GetLength(1) + 1);
+                        break;
+                    }
+                }
             }
 
             //restore board
@@ -145,12 +155,14 @@ namespace SNAKEv2
             Move();
             
         }
+        //type input
         string GetInput()
         {
             Console.WriteLine(">>Enter a direction > ");
             var userDir = Console.ReadLine();
             return (userDir);
         }
+        //wasd
         string GetInput2()
         {
             Console.WriteLine(">>Enter a direction > ");
@@ -174,6 +186,7 @@ namespace SNAKEv2
                 }
             }
         }
+        //draw the board
         void Render()
         {
             for (int i = 0; i < 25; i++)
@@ -190,6 +203,7 @@ namespace SNAKEv2
                 Console.WriteLine(row);
             }
         }
+        //returns the position of a given character !WILL ONLY RETURN ONE POSITION!
         int[] Find(string searchChar)
         {
             for (int r = 0; r < board.GetLength(0); r++)
@@ -207,6 +221,7 @@ namespace SNAKEv2
             }
             return null;
         }
+        
         void ClearBoard()
         {
             for (int r = 0; r < board.GetLength(0); r++)
@@ -217,7 +232,7 @@ namespace SNAKEv2
                 }
             }
         }
-
+        //returns the number of tails on the board
         int CountTails()
         {
             int tCount = 0;
@@ -233,7 +248,7 @@ namespace SNAKEv2
             }
             return tCount;
         }
-
+        //clones an object
         public static T DeepClone<T>(T obj)
         {
             using (var ms = new MemoryStream())
