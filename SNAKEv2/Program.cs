@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Threading.Tasks;
-//classic snake game
+//classic snake game, vs AI
 namespace SNAKEv2
 {
     [Serializable]
@@ -95,7 +95,7 @@ namespace SNAKEv2
 
             headCoords.Insert(0, toAdd);
 
-            var headDir = GetInput();
+            var headDir = GetInput2();
 
             if (headDir == "up")
             {
@@ -155,7 +155,24 @@ namespace SNAKEv2
         {
             Console.WriteLine(">>Enter a direction > ");
             var keyinfo = Console.ReadKey();
-            return (keyinfo.Key);
+            while (true){
+                if (keyinfo.Key == ConsoleKey.W)
+                {
+                    return "up";
+                }
+                if (keyinfo.Key == ConsoleKey.S)
+                {
+                    return "down";
+                }
+                if (keyinfo.Key == ConsoleKey.A)
+                {
+                    return "left";
+                }
+                if (keyinfo.Key == ConsoleKey.D)
+                {
+                    return "right";
+                }
+            }
         }
         void Render()
         {
