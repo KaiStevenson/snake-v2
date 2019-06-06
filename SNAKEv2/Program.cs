@@ -127,8 +127,8 @@ namespace SNAKEv2
 
                     if (xTest != cachedPosFood[0] && ytest != cachedPosFood[1])
                     {
-                        cachedPosFood[0] = random.Next(0, board.GetLength(0) + 1);
-                        cachedPosFood[1] = random.Next(0, board.GetLength(1) + 1);
+                        cachedPosFood[0] = random.Next(0, board.GetLength(0));
+                        cachedPosFood[1] = random.Next(0, board.GetLength(1));
                         break;
                     }
                 }
