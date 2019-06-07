@@ -4,7 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using System.Threading.Tasks;
+using System.Threading;
+using System.Reflection;
+using System.Resources;
+using System.Collections;
+
+
 //classic snake game, vs AI
 namespace SNAKEv2
 {
@@ -13,7 +18,8 @@ namespace SNAKEv2
     {
         string[,] board = new string[15, 15];
         List<int[]> headCoords = new List<int[]>();
-                
+        string lastMove;
+
         static void Main(string[] args)
         {
             var prog = new Program();
@@ -95,7 +101,7 @@ namespace SNAKEv2
 
             headCoords.Insert(0, toAdd);
 
-            var headDir = GetInput2();
+            var headDir = GetInput3();
 
             if (headDir == "up")
             {
@@ -153,37 +159,59 @@ namespace SNAKEv2
             //go to the next step
             Render();
             Move();
-            
+
         }
         //type input
         string GetInput()
         {
-            Console.WriteLine(">>Enter a direction > ");
-            var userDir = Console.ReadLine();
+            System.Console.WriteLine(">>Enter a direction > ");
+            var userDir = System.Console.ReadLine();
             return (userDir);
         }
         //wasd
         string GetInput2()
         {
-            Console.WriteLine(">>Enter a direction > ");
-            var keyinfo = Console.ReadKey();
-            while (true){
-                if (keyinfo.Key == ConsoleKey.W)
-                {
-                    return "up";
-                }
-                if (keyinfo.Key == ConsoleKey.S)
-                {
-                    return "down";
-                }
-                if (keyinfo.Key == ConsoleKey.A)
-                {
-                    return "left";
-                }
-                if (keyinfo.Key == ConsoleKey.D)
-                {
-                    return "right";
-                }
+            System.Console.WriteLine(">>Enter a direction > ");
+            var keyinfo = System.Console.ReadKey();
+            if (keyinfo.Key == System.ConsoleKey.W)
+            {
+                return "up";
+            }
+            else if (keyinfo.Key == System.ConsoleKey.S)
+            {
+                return "down";
+            }
+            else if (keyinfo.Key == System.ConsoleKey.A)
+            {
+                return "left";
+            }
+            else if (keyinfo.Key == System.ConsoleKey.D)
+            {
+                return "right";
+            }
+            else
+            {
+                return "up";
+            }
+
+        }
+        string GetInput3()
+        {
+            DateTime beginWait = DateTime.Now;
+            //while (!Console.KeyAvailable && DateTime.Now.Subtract(beginWait).TotalSeconds < 5)
+            //{
+            //    Thread.Sleep(250);
+            //}
+            Thread.Sleep(2000);
+            if (!Console.KeyAvailable)
+            {
+                Console.WriteLine("You didn't press anything!");
+                return "up";
+            }
+            else
+            {
+                Console.WriteLine("You pressed: {0}", Console.ReadKey().KeyChar);
+                return "left";
             }
         }
         //draw the board
@@ -191,16 +219,39 @@ namespace SNAKEv2
         {
             for (int i = 0; i < 25; i++)
             {
-                Console.WriteLine("");
+                System.Console.WriteLine("");
             }
             for (int r = 0; r < board.GetLength(1); r++)
             {
-                var row = "";
                 for (int c = 0; c < board.GetLength(0); c++)
                 {
-                    row += board[c, r];
+                    if (board[c, r] == "X")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write("X");
+                        Console.ResetColor();
+                    }
+                    else if (board[c, r] == "O")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("O");
+                        Console.ResetColor();
+                    }
+                    else if (board[c, r] == "S")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("S");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.Write(board[c, r]);
+                    }
+                    //row += board[c, r];
                 }
-                Console.WriteLine(row);
+                //System.Console.WriteLine(row);
+                //WriteLineWithColoredLetter(letters, letters[22]);
+                Console.SetCursorPosition(0, Console.CursorTop + 1);
             }
         }
         //returns the position of a given character !WILL ONLY RETURN ONE POSITION!
@@ -221,7 +272,7 @@ namespace SNAKEv2
             }
             return null;
         }
-        
+
         void ClearBoard()
         {
             for (int r = 0; r < board.GetLength(0); r++)
@@ -258,8 +309,8 @@ namespace SNAKEv2
                 ms.Position = 0;
 
                 return (T)formatter.Deserialize(ms);
+
             }
         }
-
     }
 }
