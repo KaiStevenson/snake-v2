@@ -27,6 +27,10 @@ namespace SNAKEv2
         }
         void Init()
         {
+            Console.CursorVisible = true;
+            Console.CursorSize = 100;
+            Console.SetBufferSize(100, Int16.MaxValue -1);
+            lastMove = "left";
             //populate board
             var headX = 99;
             var headY = 99;
@@ -126,15 +130,33 @@ namespace SNAKEv2
             {
                 var random = new Random();
                 foodEaten = true;
+
                 while (true)
                 {
-                    var xTest = random.Next(0, board.GetLength(0) + 1);
-                    var ytest = random.Next(0, board.GetLength(1) + 1);
+                    var testing = false;
 
-                    if (xTest != cachedPosFood[0] && ytest != cachedPosFood[1])
+                    var xTest = random.Next(1, board.GetLength(0) -1);
+                    var ytest = random.Next(1, board.GetLength(1) -1);
+
+                    if(xTest != cachedPosHead[0] && ytest != cachedPosHead[1])
                     {
-                        cachedPosFood[0] = random.Next(0, board.GetLength(0));
-                        cachedPosFood[1] = random.Next(0, board.GetLength(1));
+                        for (int i = 0; i < tailCount; i++)
+                        {
+                            if (xTest == headCoords[i][0] && ytest == headCoords[i][1])
+                            {
+                                testing = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        testing = true;
+                    }
+
+                    if(testing == false)
+                    {
+                        cachedPosFood[0] = xTest;
+                        cachedPosFood[1] = ytest;
                         break;
                     }
                 }
@@ -162,84 +184,79 @@ namespace SNAKEv2
 
         }
         //type input
-        string GetInput()
-        {
-            System.Console.WriteLine(">>Enter a direction > ");
-            var userDir = System.Console.ReadLine();
-            return (userDir);
-        }
-        //wasd
-        string GetInput2()
-        {
-            System.Console.WriteLine(">>Enter a direction > ");
-            var keyinfo = System.Console.ReadKey();
-            if (keyinfo.Key == System.ConsoleKey.W)
-            {
-                return "up";
-            }
-            else if (keyinfo.Key == System.ConsoleKey.S)
-            {
-                return "down";
-            }
-            else if (keyinfo.Key == System.ConsoleKey.A)
-            {
-                return "left";
-            }
-            else if (keyinfo.Key == System.ConsoleKey.D)
-            {
-                return "right";
-            }
-            else
-            {
-                return "up";
-            }
-
-        }
         string GetInput3()
         {
             DateTime beginWait = DateTime.Now;
-            //while (!Console.KeyAvailable && DateTime.Now.Subtract(beginWait).TotalSeconds < 5)
-            //{
-            //    Thread.Sleep(250);
-            //}
-            Thread.Sleep(2000);
+            Thread.Sleep(150);
             if (!Console.KeyAvailable)
             {
-                Console.WriteLine("You didn't press anything!");
-                return "up";
+                return lastMove;
             }
             else
             {
-                Console.WriteLine("You pressed: {0}", Console.ReadKey().KeyChar);
-                return "left";
+                var keyinfo = System.Console.ReadKey();
+
+                if (keyinfo.Key == System.ConsoleKey.W)
+                {
+                    lastMove = "up";
+                    return "up";
+                }
+                else if (keyinfo.Key == System.ConsoleKey.S)
+                {
+                    lastMove = "down";
+                    return "down";
+                }
+                else if (keyinfo.Key == System.ConsoleKey.A)
+                {
+                    lastMove = "left";
+                    return "left";
+                }
+                else if (keyinfo.Key == System.ConsoleKey.D)
+                {
+                    lastMove = "right";
+                    return "right";
+                }
+                else
+                {
+                    return lastMove;
+                }
             }
         }
         //draw the board
         void Render()
         {
-            for (int i = 0; i < 25; i++)
-            {
-                System.Console.WriteLine("");
-            }
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop + 15);
             for (int r = 0; r < board.GetLength(1); r++)
             {
+                var random = new Random();
+                var randChance = random.Next(0, 12);
+                if(randChance == 1)
+                {
+                    Console.Write(" ");
+                }
+                if(randChance == 7)
+                {
+                    Console.Write(" ");
+                    Console.Write(" ");
+                }
                 for (int c = 0; c < board.GetLength(0); c++)
                 {
                     if (board[c, r] == "X")
                     {
-                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("X");
                         Console.ResetColor();
                     }
                     else if (board[c, r] == "O")
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("O");
                         Console.ResetColor();
                     }
                     else if (board[c, r] == "S")
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
                         Console.Write("S");
                         Console.ResetColor();
                     }
@@ -247,10 +264,7 @@ namespace SNAKEv2
                     {
                         Console.Write(board[c, r]);
                     }
-                    //row += board[c, r];
                 }
-                //System.Console.WriteLine(row);
-                //WriteLineWithColoredLetter(letters, letters[22]);
                 Console.SetCursorPosition(0, Console.CursorTop + 1);
             }
         }
@@ -298,19 +312,6 @@ namespace SNAKEv2
                 }
             }
             return tCount;
-        }
-        //clones an object
-        public static T DeepClone<T>(T obj)
-        {
-            using (var ms = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, obj);
-                ms.Position = 0;
-
-                return (T)formatter.Deserialize(ms);
-
-            }
         }
     }
 }
