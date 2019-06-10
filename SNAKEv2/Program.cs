@@ -8,6 +8,8 @@ using System.Threading;
 using System.Reflection;
 using System.Resources;
 using System.Collections;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 
 //classic snake game, vs AI
@@ -23,13 +25,45 @@ namespace SNAKEv2
         static void Main(string[] args)
         {
             var prog = new Program();
-            prog.Init();
+            prog.BeforeStart();
+        }
+        void BeforeStart()
+        {
+            var writeSpeed = 3;
+            Maximize();
+            WriteSlow("Welcome to glitchSnake()", writeSpeed);
+            Console.WriteLine("");
+            WriteSlow("It can be hard to keep track of your snake, so we recommend increasing the font size", writeSpeed);
+            Console.WriteLine("");
+            WriteSlow("To do so, right click the top bar of the game, then select properties and go the font tab. Change size to whatever you want", writeSpeed);
+            Console.WriteLine("");
+            WriteSlow("Press any key to continue", writeSpeed);
+            Console.ReadKey();
+            Countdown();
+            Init();
+        }
+        void Countdown()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                Console.WriteLine(" ");
+            }
+            for (int c = 0; c < 5; c++)
+            {
+                var random = new Random();
+                var randint = random.Next(1, 9);
+                for (int i = 0; i < randint; i++)
+                {
+                    Console.Write(c);
+                }
+                Thread.Sleep(500);
+            }
         }
         void Init()
         {
             Console.CursorVisible = true;
             Console.CursorSize = 100;
-            Console.SetBufferSize(100, Int16.MaxValue -1);
+            Console.SetBufferSize(500, Int16.MaxValue -1);
             lastMove = "left";
             //populate board
             var headX = 99;
@@ -122,6 +156,23 @@ namespace SNAKEv2
             if (headDir == "right")
             {
                 cachedPosHead[0] += 1;
+            }
+            //wrap around
+            if(cachedPosHead[1] > board.GetLength(1) -1)
+            {
+                cachedPosHead[1] = 0;
+            }
+            if (cachedPosHead[0] > board.GetLength(0) - 1)
+            {
+                cachedPosHead[0] = 0;
+            }
+            if (cachedPosHead[1] < 0)
+            {
+                cachedPosHead[1] = board.GetLength(1) - 1;
+            }
+            if (cachedPosHead[0] < 0)
+            {
+                cachedPosHead[0] = board.GetLength(0) - 1;
             }
 
             //check if food eaten
@@ -225,7 +276,7 @@ namespace SNAKEv2
         //draw the board
         void Render()
         {
-            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop + 15);
+            Console.SetCursorPosition(Console.CursorLeft, 50);
             for (int r = 0; r < board.GetLength(1); r++)
             {
                 var random = new Random();
@@ -262,6 +313,11 @@ namespace SNAKEv2
                     }
                     else
                     {
+                        var randInt = random.Next(0, 100);
+                        if(randInt > 97 && board[c,r] == "i")
+                        {
+                            board[c, r] = "t";
+                        }
                         Console.Write(board[c, r]);
                     }
                 }
@@ -313,5 +369,25 @@ namespace SNAKEv2
             }
             return tCount;
         }
+        //writes a string to the console, pausing after each character
+        void WriteSlow(string targetString, int delay)
+        {
+            for (int i = 0; i < targetString.Length; i++)
+            {
+                Console.Write(targetString[i]);
+                Thread.Sleep(delay);
+            }
+            Console.WriteLine(" ");
+        }
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(System.IntPtr hWnd, int cmdShow);
+
+        private static void Maximize()
+        {
+            Process p = Process.GetCurrentProcess();
+            ShowWindow(p.MainWindowHandle, 3); //SW_MAXIMIZE = 3
+        }
+
     }
 }
