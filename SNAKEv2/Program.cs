@@ -310,10 +310,15 @@ namespace SNAKEv2
                     }
                     else if (board[c, r] == "S")
                     {
-                        if(randChance > 4)
+                        if(randChance > 1)
                         {
                             Console.BackgroundColor = ConsoleColor.White;
                             Console.ForegroundColor = ConsoleColor.Black;
+                        }
+                        else
+                        {
+                            Console.BackgroundColor = ConsoleColor.DarkRed;
+                            Console.ForegroundColor = ConsoleColor.DarkBlue;
                         }
                         Console.Write("S");
                         Console.ResetColor();
