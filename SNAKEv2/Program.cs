@@ -37,6 +37,10 @@ namespace SNAKEv2
             Console.WriteLine("");
             WriteSlow("To do so, right click the top bar of the game, then select properties and go the font tab. Change size to whatever you want", writeSpeed);
             Console.WriteLine("");
+            WriteSlow("After changing the size, restart the game",writeSpeed);
+            Console.WriteLine(" ");
+            WriteSlow("Instructions: Use WASD to move, collect the S to grow", writeSpeed);
+            Console.WriteLine(" ");
             WriteSlow("Press any key to continue", writeSpeed);
             Console.ReadKey();
             Countdown();
@@ -48,7 +52,7 @@ namespace SNAKEv2
             {
                 Console.WriteLine(" ");
             }
-            for (int c = 0; c < 5; c++)
+            for (int c = 0; c < 6; c++)
             {
                 var random = new Random();
                 var randint = random.Next(1, 9);
@@ -56,11 +60,12 @@ namespace SNAKEv2
                 {
                     Console.Write(c);
                 }
-                Thread.Sleep(500);
+                Thread.Sleep(300);
             }
         }
         void Init()
         {
+            Maximize();
             Console.CursorVisible = true;
             Console.CursorSize = 100;
             Console.SetBufferSize(500, Int16.MaxValue -1);
@@ -133,14 +138,12 @@ namespace SNAKEv2
             ClearBoard();
 
             //update positions
-            var toAdd = new int[2];
-            toAdd[0] = cachedPosHead[0];
-            toAdd[1] = cachedPosHead[1];
+            var cPos = new int[2];
+            cPos[0] = cachedPosHead[0];
+            cPos[1] = cachedPosHead[1];
+            headCoords.Insert(0, cPos);
 
-            headCoords.Insert(0, toAdd);
-
-            var headDir = GetInput3();
-
+            var headDir = GetInput();
             if (headDir == "up")
             {
                 cachedPosHead[1] -= 1;
@@ -157,6 +160,7 @@ namespace SNAKEv2
             {
                 cachedPosHead[0] += 1;
             }
+                       
             //wrap around
             if(cachedPosHead[1] > board.GetLength(1) -1)
             {
@@ -235,7 +239,7 @@ namespace SNAKEv2
 
         }
         //type input
-        string GetInput3()
+        string GetInput()
         {
             DateTime beginWait = DateTime.Now;
             Thread.Sleep(150);
@@ -306,8 +310,11 @@ namespace SNAKEv2
                     }
                     else if (board[c, r] == "S")
                     {
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.BackgroundColor = ConsoleColor.White;
+                        if(randChance > 4)
+                        {
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
                         Console.Write("S");
                         Console.ResetColor();
                     }
@@ -321,8 +328,10 @@ namespace SNAKEv2
                         Console.Write(board[c, r]);
                     }
                 }
-                Console.SetCursorPosition(0, Console.CursorTop + 1);
+                Console.SetCursorPosition(0, Console.CursorTop+1);
             }
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop+1);
+            Console.WriteLine("EXT_" + CountTails());
         }
         //returns the position of a given character !WILL ONLY RETURN ONE POSITION!
         int[] Find(string searchChar)
