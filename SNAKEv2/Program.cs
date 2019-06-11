@@ -290,35 +290,44 @@ namespace SNAKEv2
                     Console.Write(" ");
                     Console.Write(" ");
                 }
+
                 for (int c = 0; c < board.GetLength(0); c++)
                 {
-                    if (board[c, r] == "X")
+                    var randChance2 = random.Next(0, 100);
+                    if (randChance2 > 95)
                     {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("X");
-                        Console.ResetColor();
-                    }
-                    else if (board[c, r] == "O")
-                    {
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write("O");
-                        Console.ResetColor();
-                    }
-                    else if (board[c, r] == "S")
-                    {
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.Write("S");
-                        Console.ResetColor();
+                        Console.Write(" ");
                     }
                     else
                     {
-                        var randInt = random.Next(0, 100);
-                        if(randInt > 97 && board[c,r] == "i")
+                        if (board[c, r] == "X")
                         {
-                            board[c, r] = "t";
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write("X");
+                            Console.ResetColor();
                         }
-                        Console.Write(board[c, r]);
+                        else if (board[c, r] == "O")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.Write("O");
+                            Console.ResetColor();
+                        }
+                        else if (board[c, r] == "S")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.Write("S");
+                            Console.ResetColor();
+                        }
+                        else
+                        {
+                            var randChance3 = random.Next(0, 100);
+                            if (randChance3 > 97 && board[c, r] == "i")
+                            {
+                                board[c, r] = "t";
+                            }
+                            Console.Write(board[c, r]);
+                        }
                     }
                 }
                 Console.SetCursorPosition(0, Console.CursorTop + 1);
