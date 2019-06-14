@@ -39,7 +39,7 @@ namespace SNAKEv2
             Console.WriteLine("");
             WriteSlow("After changing the size, restart the game",writeSpeed);
             Console.WriteLine(" ");
-            WriteSlow("Instructions: Use WASD to move, collect the S to grow", writeSpeed);
+            WriteSlow("Instructions: You are the magenta 'O'. Your tail is the line of cyan 'X's. Use WASD to move, collect the S to grow", writeSpeed * 3);
             Console.WriteLine(" ");
             WriteSlow("Press any key to continue", writeSpeed);
             Console.ReadKey();
@@ -317,8 +317,8 @@ namespace SNAKEv2
                         }
                         else
                         {
-                            Console.BackgroundColor = ConsoleColor.DarkRed;
-                            Console.ForegroundColor = ConsoleColor.DarkBlue;
+                            Console.BackgroundColor = ConsoleColor.Magenta;
+                            Console.ForegroundColor = ConsoleColor.Cyan;
                         }
                         Console.Write("S");
                         Console.ResetColor();
