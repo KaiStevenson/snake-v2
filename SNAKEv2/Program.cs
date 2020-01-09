@@ -39,7 +39,7 @@ namespace SNAKEv2
             Console.WriteLine("");
             WriteSlow("After changing the size, restart the game",writeSpeed);
             Console.WriteLine(" ");
-            WriteSlow("Instructions: You are the magenta 'O'. Your tail is the line of cyan 'X's. Use WASD to move, collect the S to grow", writeSpeed * 3);
+            WriteSlow("Instructions: You are the magenta 'O'. Your tail is the line of cyan 'X's. Use WASD to move, collect the + to grow", writeSpeed * 3);
             Console.WriteLine(" ");
             WriteSlow("Press any key to continue", writeSpeed);
             Console.ReadKey();
@@ -58,13 +58,14 @@ namespace SNAKEv2
                 var randint = random.Next(1, 9);
                 for (int i = 0; i < randint; i++)
                 {
-                    Console.Write(c);
+                    Console.Write("█");
                 }
                 Thread.Sleep(300);
             }
         }
         void Init()
         {
+            Console.Clear();
             Maximize();
             Console.CursorVisible = true;
             Console.CursorSize = 100;
@@ -285,27 +286,44 @@ namespace SNAKEv2
             {
                 var random = new Random();
                 var randChance = random.Next(0, 12);
-                if(randChance == 1)
+                var randChance2 = random.Next(0, 100);
+                if (randChance == 1)
                 {
-                    Console.Write(" ");
+                    //Console.Write(" ");
                 }
                 if(randChance == 7)
                 {
-                    Console.Write(" ");
-                    Console.Write(" ");
+                    //Console.Write(" ");
+                    //Console.Write(" ");
                 }
                 for (int c = 0; c < board.GetLength(0); c++)
                 {
                     if (board[c, r] == "X")
                     {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("X");
+                        if(randChance2 == 1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.Write("0");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write("X");
+                        }
                         Console.ResetColor();
                     }
                     else if (board[c, r] == "O")
                     {
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write("O");
+                        if (randChance2 == 1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write("X");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.Write("O");
+                        }
                         Console.ResetColor();
                     }
                     else if (board[c, r] == "S")
@@ -320,7 +338,7 @@ namespace SNAKEv2
                             Console.BackgroundColor = ConsoleColor.Magenta;
                             Console.ForegroundColor = ConsoleColor.Cyan;
                         }
-                        Console.Write("S");
+                        Console.Write("+");
                         Console.ResetColor();
                     }
                     else
