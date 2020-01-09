@@ -130,6 +130,13 @@ namespace SNAKEv2
 
             //the head
             var cachedPosHead = Find("O");
+            if(cachedPosHead == null)
+            {
+                Console.Write("Unhandled Exception: 'Internal Collision Error' - Lifeform Terminated");
+                Thread.Sleep(2500);
+                Console.Clear();
+                Init();
+            }
             //the tails
             var tailCount = CountTails();
             //the food
@@ -242,7 +249,7 @@ namespace SNAKEv2
         //type input
         string GetInput()
         {
-            DateTime beginWait = DateTime.Now;
+            //DateTime beginWait = DateTime.Now;
             Thread.Sleep(150);
             if (!Console.KeyAvailable)
             {
@@ -252,28 +259,28 @@ namespace SNAKEv2
             {
                 var keyinfo = System.Console.ReadKey();
 
-                if (keyinfo.Key == System.ConsoleKey.W)
+                if (keyinfo.Key == System.ConsoleKey.W && lastMove != "down")
                 {
                     lastMove = "up";
                     return "up";
                 }
-                else if (keyinfo.Key == System.ConsoleKey.S)
+                else if (keyinfo.Key == System.ConsoleKey.S && lastMove != "up")
                 {
                     lastMove = "down";
                     return "down";
                 }
-                else if (keyinfo.Key == System.ConsoleKey.A)
+                else if (keyinfo.Key == System.ConsoleKey.A && lastMove != "right")
                 {
                     lastMove = "left";
                     return "left";
                 }
-                else if (keyinfo.Key == System.ConsoleKey.D)
+                else if (keyinfo.Key == System.ConsoleKey.D && lastMove != "left")
                 {
                     lastMove = "right";
                     return "right";
                 }
                 else
-                {
+                {                   
                     return lastMove;
                 }
             }
